@@ -3,6 +3,7 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { runScan, SOURCES } from './scan.mjs';
+import { foundBy } from './dedupe.mjs';
 import { loadConfig, addCompanies, initHome } from './config.mjs';
 import { writeReport, jobLine } from './report.mjs';
 import { createMatcher } from './match.mjs';
@@ -172,7 +173,7 @@ function cmdRescore() {
     state.jobs[job.key].tier = job.tier;
   }
   state.save();
-  const sources = latest.sources.map((src) => ({ ...src, fits: matches.filter((j) => j.source === src.id).length }));
+  const sources = latest.sources.map((src) => ({ ...src, fits: foundBy(matches, src.id) }));
   const totals = {
     ...latest.totals,
     strong: matches.filter((j) => j.tier === 'strong').length,

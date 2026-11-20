@@ -97,8 +97,10 @@ export function writeReport(scan) {
     totals: scan.totals,
     sources: scan.sources,
     excludedCounts: scan.excludedCounts,
-    // Descriptions are kept so `rescore` can apply a changed profile without reading any site again.
-    matches: scan.matches.map((j) => ({ ...j, description: (j.description || '').slice(0, 12_000) })),
+    // Every field a verdict was computed from is kept whole (descriptions too), so `rescore`
+    // can apply a changed profile without reading any site, and gives the scan's own result
+    // when the profile is unchanged.
+    matches: scan.matches,
   };
   writeFileSync(join(OUT_DIR, 'latest.json'), JSON.stringify(data, null, 1));
   return { dated, latest: join(OUT_DIR, 'latest.md'), json: join(OUT_DIR, 'latest.json') };

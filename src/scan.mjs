@@ -5,7 +5,7 @@ import { loadConfig } from './config.mjs';
 import { createHttp } from './http.mjs';
 import { createMatcher } from './match.mjs';
 import { jobKey, roleKey } from './keys.mjs';
-import { longTitleKey, companyKey, titleKey } from './text.mjs';
+import { dedupe, foundBy } from './dedupe.mjs';
 import { loadKnown } from './careerops.mjs';
 import { loadState, readDetail, writeDetail, pruneDetails } from './state.mjs';
 import { closeBrowser } from './browser.mjs';
@@ -22,7 +22,7 @@ import hackernews from './sources/hackernews.mjs';
 import companies from './sources/companies.mjs';
 
 export const SOURCES = [companies, startupjobs, cocuma, jobscz, workable, himalayas, remotive, weworkremotely, hackernews, linkedin];
-// When one role shows up in several places, the earlier source's link is kept.
+// When one role shows up in several places, the earlier source's listing is kept (see dedupe.mjs).
 const PRIORITY = Object.fromEntries(SOURCES.map((s, i) => [s.id, i]));
 
 export { loadConfig };
@@ -100,49 +100,6 @@ function mergeDetail(job, detail) {
   return merged;
 }
 
-/** Merge the same posting / same role found in several sources. */
-function dedupe(jobs) {
-  const sorted = [...jobs].sort((a, b) => (PRIORITY[a.source] ?? 99) - (PRIORITY[b.source] ?? 99) || b.score - a.score);
-  const byKey = new Map();
-  const byRole = new Map();
-  const byLong = new Map();
-  const byTitle = new Map();
-  const kept = [];
-  const sameTitleSameCompany = (job) => {
-    const company = companyKey(job.company);
-    if (!company) return null;
-    return (byTitle.get(titleKey(job.title)) || []).find((other) => {
-      const known = companyKey(other.company);
-      return known && (known.startsWith(`${company} `) || company.startsWith(`${known} `));
-    }) || null;
-  };
-  for (const job of sorted) {
-    const role = roleKey(job.company, job.title);
-    const long = longTitleKey(job.title);
-    const existing = byKey.get(job.key) || (role && byRole.get(role)) || (long && byLong.get(long)) || sameTitleSameCompany(job);
-    if (existing) {
-      if (existing.source !== job.source && !existing.alsoAt.some((a) => a.url === job.url)) {
-        existing.alsoAt.push({ source: job.source, url: job.url });
-      }
-      // Keep the better-informed verdict (a read description beats a title-only score).
-      if (job.score > existing.score && (job.description || '').length > (existing.description || '').length) {
-        for (const f of ['score', 'tier', 'track', 'trackLabel', 'reasons', 'flags', 'place', 'description']) existing[f] = job[f];
-      }
-      if (!existing.postedAt && job.postedAt) existing.postedAt = job.postedAt;
-      if (!existing.salary && job.salary) existing.salary = job.salary;
-      continue;
-    }
-    const entry = { ...job, alsoAt: [] };
-    kept.push(entry);
-    byKey.set(job.key, entry);
-    if (role) byRole.set(role, entry);
-    if (long) byLong.set(long, entry);
-    const tk = titleKey(job.title);
-    byTitle.set(tk, [...(byTitle.get(tk) || []), entry]);
-  }
-  return kept;
-}
-
 /**
  * @param {object} [options]
  * @param {string[]} [options.only] source ids to run (default: all enabled)
@@ -177,8 +134,10 @@ export async function runScan({ only, verbose = false, dry = false, fresh = fals
   await closeBrowser();
 
   const all = results.flatMap((r) => r.jobs);
-  const matches = dedupe(all.filter((j) => j.tier === 'strong' || j.tier === 'maybe'))
-    .sort((a, b) => b.score - a.score || (b.postedAt || 0) - (a.postedAt || 0));
+  const matches = dedupe(all.filter((j) => j.tier === 'strong' || j.tier === 'maybe'), {
+    priority: PRIORITY,
+    score: (job) => matcher.score(job, { now }),
+  }).sort((a, b) => b.score - a.score || (b.postedAt || 0) - (a.postedAt || 0));
 
   const known = loadKnown();
   const state = loadState();
@@ -222,10 +181,9 @@ export async function runScan({ only, verbose = false, dry = false, fresh = fals
     pruneDetails(now);
   }
 
-  const isFit = (j) => j.tier === 'strong' || j.tier === 'maybe';
   const sources = results.map((r) => ({
     id: r.id, label: r.label, listed: r.listed, opened: r.opened, seconds: r.seconds,
-    fits: r.jobs.filter(isFit).length, error: r.error, notes: r.notes,
+    fits: foundBy(matches, r.id), error: r.error, notes: r.notes,
   }));
 
   return {

@@ -92,7 +92,7 @@ company out.
 |---|---|
 | `scan` | Reads every source that is on, writes `out/latest.md` and `out/radar-<date>.md`. `--sources a,b` reads only those. `--push` also sends new strong fits to career-ops. `--dry` leaves no trace, so the next scan shows the same jobs again. `--fresh` rereads job pages instead of using saved copies. |
 | `push` | Sends the new strong fits of the last scan to career-ops. `--min 60` lowers the bar, `--dry` only lists them. |
-| `rescore` | Applies a changed profile to the last scan's fits and rewrites the report, without reading any site. The quick way to tune the profile. A job that was found on two sites is scored again from the kept link's own text, so a few such jobs can move by some points until the next scan. |
+| `rescore` | Applies a changed profile to the last scan's fits and rewrites the report, without reading any site. The quick way to tune the profile. With an unchanged profile it gives exactly the scan's own result. |
 | `sources` | Lists the sources and how each did in the last scan. |
 | `explain <text>` | Shows how jobs matching a title, company or link were scored. |
 | `discover "Name" [url] [--add] [--cz]` | Works out how a company's jobs can be read, starting from its homepage or careers page, and prints its entry (or, with `--add`, writes it into your `companies.yml`). When it cannot be read, it says why. |
@@ -124,8 +124,14 @@ title words that drop a job outright. The built-in one is
 [`config/profile.yml`](config/profile.yml).
 
 A job is **new** when neither an earlier radar report nor career-ops (inbox,
-scan history, tracker) has it. The same role found on several sites is reported
-once, with the other links listed.
+scan history, tracker) has it.
+
+The same role found on several sites is reported once, with the other links
+listed. The listing from the company's own site (or, between two boards, from
+the source read first) is the one kept. It takes from the other listing only
+what it lacks, a fuller description, a place when it states none, a posting
+date, pay, and is then scored again, so the score always belongs to exactly
+what the report shows.
 
 ## Sources
 
@@ -233,6 +239,7 @@ are skipped with a note.
 radar.mjs               checks the setup, then starts src/cli.mjs
 src/cli.mjs             the commands
 src/sources/            one file per source      src/match.mjs      the scoring
+src/dedupe.mjs          one entry for a job found on several sites
 src/pagejobs.mjs        reading jobs out of a careers page
 src/discover.mjs        finding a company's jobs from its homepage
 src/config.mjs          built-in settings with yours laid over them
