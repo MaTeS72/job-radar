@@ -24,9 +24,9 @@ node "${CLAUDE_PLUGIN_ROOT}/radar.mjs" <command>
 node "${CLAUDE_PLUGIN_ROOT}/radar.mjs" doctor
 ```
 
-- If it answers "not set up in this folder yet", run the `npm install` line it
-  prints and run `doctor` again. That is needed once after installing and once
-  after each update of the plugin. It needs Node 20 or newer.
+- Claude Code installs the scanner's one dependency together with the plugin.
+  If `doctor` still answers "not set up in this folder yet", run the
+  `npm install` line it prints and run `doctor` again. It needs Node 20 or newer.
 - Note the **Your data** folder it prints (`~/job-radar-data` unless
   `JOB_RADAR_HOME` is set). The user's own settings (`config/`), the reports
   (`out/`) and the record of what was already reported (`state/`) live there.

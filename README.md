@@ -35,9 +35,10 @@ That line needs Claude Code 2.1.275 or newer. On an older version use
 with `claude plugin` instead of `/plugin`.
 
 Then ask Claude to "scan for jobs", or type `/job-radar:radar`. On first use it
-installs the one dependency, creates your settings files and asks what you are
-looking for. The plugin works in every Claude account signed in on that
-computer; on another computer, install it again and copy your data folder over.
+creates your settings files and asks what you are looking for. Claude Code
+installs the one dependency together with the plugin. The plugin is installed
+for the computer's user, so every Claude account signed in there can use it; on
+another computer, install it again and copy your data folder over.
 
 ### On its own
 
@@ -256,8 +257,8 @@ Without career-ops, everything except `push` works the same.
 
 ## When something breaks
 
-- **"not set up in this folder yet"**: run the `npm install` line it prints.
-  As a plugin this is needed once after installing and once after each update.
+- **"not set up in this folder yet"**: the dependency is missing. Run the
+  `npm install` line it prints.
 - **A source fails**: the scan carries on and the report's Sources table says
   which one and why. Sites change their pages; the reader for each is one short
   file in `src/sources/`.
