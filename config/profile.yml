@@ -1,0 +1,275 @@
+# Search profile: what counts as a fit.
+#
+# These rules decide which jobs are shown. Sources only collect listings; every
+# listing is then scored here on its title AND its full description, so
+# "Software Engineer" with Flutter in the text is found, and "AI Engineer" that
+# is really Python ML research is flagged.
+#
+# This is the built-in profile: senior Flutter / mobile, agentic / AI-native
+# engineering and product roles, for someone living in Prague. To change it for
+# yourself, write only the part you want different into your own profile.yml
+# ("node radar.mjs init" creates it; the README explains how the two are
+# combined). An update of job-radar replaces this file, never yours.
+#
+# Terms are matched on whole words, without diacritics or case. `*` means "any
+# letters", which covers Czech endings ("mobiln* aplikac*").
+# Hyphens and spaces are the same thing ("AI-native" = "AI native").
+
+thresholds:
+  strong: 65        # top section of the report; pushed to the career-ops inbox
+  maybe: 50         # listed lower in the report, never pushed automatically
+  detail: 22        # score a listing needs from its title alone before its page is opened
+
+max_age_days: 45    # older postings are dropped when the source gives a date
+                    # (not for company sites, StartupJobs and Cocuma: what they list is open)
+
+# ── Dropped outright when the TITLE matches ─────────────────────────────────
+exclude_title:
+  # level
+  - junior
+  - intern
+  - interns
+  - internship
+  - trainee
+  - graduate
+  - absolvent*
+  - staz*
+  - brigad*
+  - working student
+  - werkstudent
+  - praktikant*
+  - praktikum
+  - student*
+  # other professions
+  - qa
+  - tester*
+  - test engineer
+  - test automation
+  - sdet
+  - quality assurance
+  - data engineer
+  - data scientist
+  - data analyst
+  - datov* analytik*
+  - business analyst
+  - bi developer
+  - dwh
+  - devops
+  - sre
+  - site reliability
+  - security engineer
+  - network engineer
+  - sysadmin
+  - administrator*
+  - support engineer
+  - technical support
+  - customer support
+  - customer success
+  - customer care
+  - helpdesk
+  - sales
+  - account executive
+  - account manager
+  - business developer
+  - business development
+  - obchodni*
+  - marketing*
+  - marketer*
+  - ppc
+  - seo
+  - sem
+  - paid media
+  - social media
+  - bi
+  - business intelligence
+  - implementation specialist
+  - implementation consultant
+  - onboarding
+  - recruiter
+  - talent acquisition
+  - hr
+  - designer
+  - copywriter
+  - content creator
+  - accountant
+  - ucetni
+  - lawyer
+  - project manager
+  - projektov* manazer*
+  - scrum master
+  - agile coach
+  - director
+  - vp
+  - vice president
+  # wrong engineering field
+  - embedded
+  - firmware
+  - fpga
+  - plc
+  - hardware
+  - mainframe
+  - cobol
+  - sap
+  - salesforce
+  - sharepoint
+  - power platform
+  - dynamics
+  - servicenow
+  - blockchain
+  - web3
+  - crypto
+  - game developer
+  - unity
+  - unreal
+  - threat
+  - research scientist
+  - security research*
+  - reverse engineer*
+  - it service
+  - it engineer
+  - it specialist
+  - reliability
+  - databricks
+  - snowflake
+  - analytics engineer
+  - data warehouse
+  - etl
+  - instructor
+  - teacher
+  - lektor*
+
+# ── A different main stack named in the TITLE ───────────────────────────────
+# Not a drop: a strong Flutter or agentic signal can still outweigh it.
+title_penalties:
+  - { score: -30, terms: [".net", "c#", "java", "kotlin", "swift", "php", "ruby", "rails", "golang", "go developer", "go engineer", "c++", "rust", "scala", "elixir", "angular", "wordpress", "drupal", "magento", "odoo", "abap", "delphi"] }
+  - { score: -14, terms: ["python", "backend", "back end", "data platform", "infrastructure", "platform engineer", "cloud engineer", "cloud", "aws", "azure", "gcp"] }
+  - { score: -14, terms: ["machine learning", "ml", "ml engineer", "mlops", "inference", "serving", "deep learning", "computer vision", "nlp"] }
+  - { score: -10, terms: ["head of", "engineering manager"] }
+  # One platform named in a mobile title usually means a native role.
+  - { score: -10, tracks: [flutter], terms: ["ios", "android"] }
+  # Product roles above senior level ask for long product-management careers.
+  - { score: -12, tracks: [product], terms: ["principal", "staff", "group product manager", "head of", "lead product manager"] }
+  # AI titles that are consulting, delivery or management rather than building.
+  - { score: -18, tracks: [agentic], terms: ["manager", "manazer*", "consultant*", "konzultant*", "delivery", "presales", "pre sales", "analyst", "analytik*", "data"] }
+
+# ── Tracks ───────────────────────────────────────────────────────────────────
+# A job gets the best track score:  strongest matching `title` rule
+#                                   + sum of matching `body` rules (up to body_cap).
+# `all:` means every group needs one hit (for "product manager" + "mobile").
+tracks:
+  flutter:
+    label: Flutter / mobile
+    body_cap: 34
+    title:
+      - { score: 62, terms: ["flutter", "dart"] }
+      - score: 50
+        terms: ["mobile engineer", "mobile developer", "mobile software engineer", "mobile software developer",
+                "mobile app developer", "mobile app engineer", "mobile apps developer", "mobile application developer",
+                "mobile application engineer", "mobile applications developer", "cross platform", "multiplatform",
+                "mobiln* vyvojar*", "vyvojar* mobiln*", "programator* mobiln*", "mobiln* aplikac*", "mobile lead",
+                "mobile architect", "mobile tech lead", "app developer", "app engineer", "mobile frontend",
+                "mobile front end"]
+      # "Software Engineer (mobile)", "Frontend/Mobile Developer", ...
+      - score: 46
+        all:
+          - ["mobile", "mobiln*", "mobil"]
+          - ["engineer*", "developer*", "vyvojar*", "programator*", "software", "frontend", "fullstack", "full stack"]
+      - { score: 36, terms: ["react native", "kotlin multiplatform", "kmp", "expo"] }
+      - score: 30
+        terms: ["ios developer", "ios engineer", "android developer", "android engineer", "ios vyvojar*",
+                "android vyvojar*", "ios software engineer", "android software engineer", "ios android", "android ios"]
+    body:
+      - { score: 22, terms: ["flutter"] }
+      - { score: 7, terms: ["dart", "bloc", "riverpod", "flutterflow"] }
+      - { score: 5, terms: ["cross platform", "multiplatform", "ios and android", "ios a android", "android and ios", "android a ios", "both platforms"] }
+      - { score: 4, terms: ["mobile app*", "mobiln* aplikac*", "app store", "google play", "testflight"] }
+      - { score: 3, terms: ["firebase", "firestore", "revenuecat", "push notification*"] }
+    # A generic engineering title can still qualify on the description alone.
+    body_only:
+      title_terms: ["software engineer", "software developer", "developer", "engineer", "vyvojar*", "programator*",
+                    "frontend", "front end", "fullstack", "full stack"]
+      base: 12
+
+  agentic:
+    label: Agentic / AI-native engineering
+    body_cap: 30
+    title:
+      # "AI-first" and friends describe a way of working, so they count only on a building role.
+      - score: 60
+        all:
+          - ["agentic", "ai native", "ai first", "ai assisted", "ai augmented", "ai powered", "vibe cod*", "vibecod*", "claude"]
+          - ["engineer*", "developer*", "vyvojar*", "vyvoj", "programator*", "inzenyr*", "builder", "fullstack",
+             "full stack", "software", "development", "architect*", "specialist*"]
+      - score: 60
+        terms: ["ai builder", "product builder", "ai product engineer", "ai software engineer", "ai fullstack",
+                "ai full stack", "agentic engineer*"]
+      - score: 46
+        terms: ["ai engineer", "ai developer", "ai vyvojar*", "ai software developer", "ai application*",
+                "ai solutions", "ai automation", "applied ai", "llm", "genai", "gen ai", "generative ai",
+                "ai agent*", "founding engineer", "ai specialist", "ai inzenyr*"]
+      - { score: 34, terms: ["ai platform", "forward deployed", "solutions engineer", "automation engineer", "innovation engineer"] }
+    body:
+      - score: 13
+        terms: ["claude code", "cursor", "codex", "copilot", "ai assisted", "ai native", "ai first", "agentic",
+                "coding agent*", "ai agent*", "agents md", "claude md", "mcp", "model context protocol", "vibe cod*"]
+      - { score: 6, terms: ["llm*", "prompt*", "evals", "rag", "openai", "anthropic", "claude", "gemini", "langchain", "langgraph"] }
+      - { score: 5, terms: ["typescript", "react", "next.js", "nextjs", "node.js", "nodejs", "supabase", "firebase", "cloudflare"] }
+      - { score: 4, terms: ["ship*", "end to end", "product minded", "ownership", "prototype*", "0 to 1"] }
+    body_only:
+      title_terms: ["software engineer", "software developer", "developer", "engineer", "vyvojar*", "programator*",
+                    "fullstack", "full stack"]
+      base: 8
+
+  product:
+    label: Product / growth
+    body_cap: 20
+    title:
+      - { score: 46, terms: ["product engineer", "growth engineer", "full stack product engineer"] }
+      - score: 44
+        all:
+          - ["product manager", "product owner", "produktov* manazer*", "product lead", "business owner", "produkt* vlastnik*"]
+          - ["mobile", "mobil*", "app", "apps", "aplikac*", "ai", "agentic", "growth", "technical"]
+      - { score: 44, terms: ["technical product manager", "technical product owner", "ai product manager", "mobile product"] }
+      - { score: 40, terms: ["ai enablement", "ai adoption", "ai transformation", "ai champion", "ai lead", "ai evangelist", "developer relations", "devrel", "developer advocate"] }
+      - { score: 16, terms: ["product manager", "product owner", "produktov* manazer*"] }
+    body:
+      - { score: 7, terms: ["mobile app*", "mobiln* aplikac*", "ios", "android", "flutter", "consumer app*", "b2c"] }
+      - { score: 6, terms: ["ai", "llm*", "agent*", "agentic", "claude", "automation"] }
+      - { score: 5, terms: ["growth", "moneti[sz]ation", "subscription*", "a b test*", "experiment*", "analytics", "retention", "activation"] }
+
+# ── Adjustments applied after the track score ───────────────────────────────
+adjustments:
+  seniority_terms: ["senior", "lead", "staff", "principal", "sr", "sr."]
+  seniority: 4
+  place:
+    prague: 10
+    cz-remote: 10
+    cz: 6
+    eu-remote: 8
+    remote-europe-country: -15   # "remote, UK" usually means residents of that country; also capped below strong
+    remote-unknown: 3
+    unknown: 0
+  freshness:            # days since posting -> points
+    - { within: 3, score: 6 }
+    - { within: 7, score: 4 }
+    - { within: 14, score: 2 }
+    - { older_than: 30, score: -4 }
+  no_text_support: -15   # title fits, but the description mentions none of the track's topics
+  native_only: -22       # mobile role built on Swift/Kotlin with no cross-platform mention
+  ml_heavy: -18          # model training / data science rather than building products with AI
+  python_stack: -8       # Python is the main language and none of TypeScript/Flutter appear
+  other_backend: -12     # Java/.NET/PHP/Go-heavy description
+  years_over: -10        # asks for 8+ years
+  years_stretch: -4      # asks for 6-7 years
+  remote_country_cap: 55 # "remote, <another European country>" never scores above this until checked
+  foreign_language: -45  # fluent German/French/Polish/... required, or posting written in it
+
+# ── About you ────────────────────────────────────────────────────────────────
+# Not set here: these belong in your own profile.yml. Without them the notes
+# they produce are simply left out.
+#
+# experience_years: 5            # an ad asking for clearly more gets "asks N+ years"
+#
+# salary:
+#   currency: CZK
+#   target_monthly_min: 100000   # an ad stating less gets "pay below target"; no job is dropped

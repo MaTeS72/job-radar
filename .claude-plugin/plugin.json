@@ -1,0 +1,17 @@
+{
+  "name": "job-radar",
+  "description": "Scans Czech job boards, international job sources and company career sites, scores every listing against your search profile and reports what is new. Calls no AI model. Works on its own or feeds career-ops.",
+  "author": {
+    "name": "MaTeS72"
+  },
+  "homepage": "https://github.com/MaTeS72/job-radar",
+  "repository": "https://github.com/MaTeS72/job-radar",
+  "license": "MIT",
+  "keywords": [
+    "jobs",
+    "job-search",
+    "job-boards",
+    "czech",
+    "career-ops"
+  ]
+}

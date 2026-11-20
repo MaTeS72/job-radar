@@ -1,0 +1,9 @@
+# Your companies, on top of the built-in list that comes with job-radar
+# (config/companies.yml in the code folder).
+#
+#   companies:   career sites of your own. An entry with a built-in company's
+#                name replaces that entry.
+#   skip:        built-in companies you do not want read, by name:
+#                skip: ["Canonical", "GitLab"]
+#
+# "node radar.mjs discover <name> <address> --add" writes here.

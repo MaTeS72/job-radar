@@ -1,0 +1,114 @@
+# Which sources are read and with what searches.
+# `node radar.mjs sources` lists them with the result of the last run.
+#
+# These are the built-in settings. To turn a source on or off or to change a
+# search, write only that part into your own sources.yml ("node radar.mjs init"
+# creates it). An update of job-radar replaces this file, never yours.
+
+# Minimum gap between two requests to the same site, in milliseconds.
+pacing:
+  default: 700
+  hosts:
+    linkedin.com: 20000      # LinkedIn answers 429 at about 3 requests a minute
+    jobs.cz: 1200
+    startupjobs.cz: 350
+    cocuma.cz: 800
+
+# How many job pages one source may open per run (each is one request).
+detail_limit: 60
+
+sources:
+  # ── Czech job boards ───────────────────────────────────────────────────────
+  startupjobs:
+    enabled: true            # whole board is read (a few hundred offers)
+    detail_limit: 120
+
+  jobscz:
+    enabled: true
+    detail_limit: 150
+    location: praha          # region for `keywords`
+    max_pages: 3             # 30 results per page
+    # Narrow terms, searched in the whole country (remote roles sit anywhere).
+    keywords_nationwide:
+      - flutter
+      - dart
+      - react native
+      - agentic
+      - AI native
+      - AI first
+      - claude code
+      - cursor AI
+      - vibe coding
+    # Broader terms, Prague only.
+    keywords:
+      - mobile developer
+      - mobilní vývojář
+      - vývojář mobilních aplikací
+      - mobilní aplikace
+      - product engineer
+      - growth engineer
+      - AI engineer
+      - AI developer
+      - AI agent
+      - LLM
+      - GenAI
+      - technical product manager
+      - technical product owner
+      - product owner mobilní aplikace
+      - product manager mobile app
+
+  cocuma:
+    enabled: true            # whole board is read (about 200 jobs)
+
+  # Off unless you turn it on in your own sources.yml. This reads the search
+  # that signed-out visitors see: no account, no cookies, one request every 20
+  # seconds. LinkedIn's terms do not allow automated reading, so whether to use
+  # it is your decision and your responsibility.
+  linkedin:
+    enabled: false
+    window_days: 14          # postings from the last N days
+    pages: 2                 # 10 results per page
+    detail_limit: 10         # opened job pages per run
+    max_minutes: 7           # stop collecting after this long, keep what was found
+    # Keywords take LinkedIn's own syntax: OR, quotes, brackets. Fewer, broader
+    # searches mean fewer requests, which matters here (see pacing above).
+    searches:
+      - { keywords: 'flutter OR "react native" OR "mobile developer" OR "mobile engineer"', location: "Czechia" }
+      - { keywords: 'agentic OR "AI native" OR "AI first" OR "AI engineer" OR "product engineer"', location: "Czechia" }
+      - { keywords: '"technical product manager" OR "technical product owner" OR "product manager mobile"', location: "Prague, Czechia", pages: 1 }
+      # International, remote only
+      - { keywords: "flutter", location: "European Union", remote: true }
+      - { keywords: 'agentic OR "AI native" engineer', location: "European Union", remote: true, pages: 1 }
+
+  # ── International search across many companies ────────────────────────────
+  workable:
+    enabled: true            # jobs.workable.com: every company that hosts jobs on Workable
+    queries: ["flutter", "agentic engineer", "AI native engineer", "product engineer AI"]
+    locations: ["Czechia", "Europe"]
+    max_pages: 2
+
+  himalayas:
+    enabled: true            # remote jobs, with the countries each is open to
+    queries: ["flutter", "mobile engineer", "agentic", "product engineer", "AI engineer"]
+    max_pages: 2
+
+  remotive:
+    enabled: true
+    queries: ["flutter", "mobile", "agentic", "product engineer"]
+
+  weworkremotely:
+    enabled: true
+    feeds:
+      - https://weworkremotely.com/categories/remote-full-stack-programming-jobs.rss
+      - https://weworkremotely.com/categories/remote-front-end-programming-jobs.rss
+      - https://weworkremotely.com/categories/remote-programming-jobs.rss
+      - https://weworkremotely.com/categories/remote-product-jobs.rss
+
+  hackernews:
+    enabled: true            # the current "Who is hiring?" thread
+    queries: ["flutter", "agentic", "claude code", "react native", "product engineer"]
+
+  # ── Company career sites (companies.yml) ──────────────────────────────────
+  companies:
+    enabled: true
+    detail_limit: 80

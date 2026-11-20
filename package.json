@@ -1,0 +1,25 @@
+{
+  "name": "job-radar",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Job scanner: Czech job boards, international search sources and company career sites, scored against a search profile. Runs on its own or as a Claude Code plugin, and can feed the career-ops inbox.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MaTeS72/job-radar.git"
+  },
+  "bin": {
+    "job-radar": "radar.mjs"
+  },
+  "scripts": {
+    "scan": "node radar.mjs scan",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "yaml": "^2.6.0"
+  }
+}

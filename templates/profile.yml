@@ -1,0 +1,32 @@
+# Your own search profile, laid over the built-in one that comes with job-radar
+# (config/profile.yml in the code folder; "node radar.mjs doctor" prints where
+# that is). Write here only what you want different:
+#
+#   a value        replaces the built-in value
+#   a map          is merged key by key
+#   a list         replaces the built-in list, unless you write
+#   name+: [...]   to add entries to the list
+#   name-: [...]   to take entries out of the list
+#
+# "node radar.mjs rescore" shows the effect of a change on the last scan
+# without reading any site again.
+
+# Your years of experience. An ad that asks for clearly more gets a note.
+# experience_years: 5
+
+# The pay you look for. An ad that states less gets a note; no job is dropped.
+# salary:
+#   currency: CZK
+#   target_monthly_min: 100000
+
+# Examples of other changes:
+#
+# thresholds:
+#   strong: 70                    # be stricter about what counts as a strong fit
+#
+# exclude_title+: [wordpress]     # one more title word that drops a job
+# exclude_title-: [designer]      # stop dropping this one
+#
+# adjustments:
+#   place:
+#     eu-remote: 12               # like remote jobs across Europe a bit more

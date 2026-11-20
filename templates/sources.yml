@@ -1,0 +1,20 @@
+# Your own source settings, laid over the built-in ones that come with
+# job-radar (config/sources.yml in the code folder). Write here only what you
+# want different; the rules are the same as in profile.yml:
+#
+#   a value        replaces the built-in value
+#   a map          is merged key by key
+#   name+: [...]   adds entries to a list,   name-: [...]   takes entries out
+#
+# "node radar.mjs sources" lists every source and whether it is on.
+
+# Examples:
+#
+# sources:
+#   linkedin:
+#     enabled: true                     # off unless you turn it on; read the README first
+#   jobscz:
+#     location: brno                    # region for the broader keywords
+#     keywords+: ["ios developer"]
+#   remotive:
+#     enabled: false

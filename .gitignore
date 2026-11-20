@@ -1,0 +1,7 @@
+node_modules/
+.DS_Store
+
+# Your settings and results live in your data folder (~/job-radar-data), not in
+# the code. Early versions kept them here; ignored in case an old copy remains.
+state/
+out/

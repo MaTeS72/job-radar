@@ -1,0 +1,56 @@
+{
+ "@id": "/api/offers/100001",
+ "@type": "SearchOffer",
+ "id": 100001,
+ "name": {
+  "cs": "Senior Flutter vývojář/ka | aplikace, kterou lidé používají každý den",
+  "en": "Senior Flutter Developer | an app people use every day | 100% remote"
+ },
+ "slug": {
+  "cs": "senior-flutter-vyvojar-ka-aplikace-kterou-lide-pouzivaji-kazdy-den",
+  "en": "senior-flutter-developer-an-app-people-use-every-day-100-remote"
+ },
+ "salary": {
+  "@type": "SearchOfferSalary",
+  "@id": "/api/.well-known/genid/0000000000",
+  "min": 9000000,
+  "max": 13000000,
+  "currency": "CZK",
+  "period": "month"
+ },
+ "seniorities": [
+  "medior",
+  "senior"
+ ],
+ "hours": [
+  "full-time"
+ ],
+ "contracts": [
+  "freelance"
+ ],
+ "locationPreferences": [
+  "remote"
+ ],
+ "locations": [
+  {
+   "name": {
+    "cs": "Praha, Česko",
+    "en": "Prague, Czechia"
+   },
+   "place": {
+    "cs": "Praha",
+    "en": "Prague"
+   }
+  }
+ ],
+ "company": {
+  "@type": "SearchOfferCompany",
+  "@id": "/api/.well-known/genid/1111111111",
+  "startup": false,
+  "name": "Example Labs, s.r.o.",
+  "slug": "example-labs-s-r-o",
+  "logo": "https://assets.example.com/logo.jpg"
+ },
+ "hasPreferentialOrdering": true,
+ "isPartialMatch": false
+}

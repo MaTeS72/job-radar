@@ -1,0 +1,16 @@
+{
+  "name": "job-radar",
+  "owner": {
+    "name": "MaTeS72"
+  },
+  "metadata": {
+    "description": "Single-plugin marketplace for job-radar."
+  },
+  "plugins": [
+    {
+      "name": "job-radar",
+      "source": "./",
+      "description": "Scans Czech job boards, international job sources and company career sites, scores every listing against your search profile and reports what is new."
+    }
+  ]
+}

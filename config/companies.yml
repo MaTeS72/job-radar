@@ -1,0 +1,115 @@
+# Companies whose own career sites are read directly: the built-in list.
+#
+# Your own companies go into your companies.yml, not here (an update of
+# job-radar replaces this file). Add one with its homepage or careers page and
+# the radar works out the rest:
+#   node radar.mjs discover "Name" https://company.example --add [--cz]
+#   node radar.mjs discover --file companies.txt --add      (one "Name | URL | cz" per line)
+# When a company cannot be read, the same command says why. To leave a built-in
+# company out, name it under `skip:` in your companies.yml.
+#
+# Kinds of entry:
+#   ats + slug     a hiring system's board (clean list, full texts).
+#                  `ats: jobscz` is special: the company's own ads on Jobs.cz,
+#                  for a site that is closed to automated readers.
+#   url            the page that lists the jobs: the company's own careers page,
+#                  or a job widget it embeds from another service.
+#                  render: true      load it in a headless browser (pages built by JavaScript)
+#                  link_pattern:     regular expression for job links, when the automatic pick misses
+#                  location:         used for jobs whose card does not state a place
+#   country: cz    a job without a stated place is taken to be in Czechia
+#
+# A company with no openings today stays in the list and is checked on every scan.
+# The radar also adds companies by itself when a strong fit turns up on a board
+# it can read; those are kept in state/companies-auto.json in your data folder.
+
+companies:
+  # ── Czechia: product companies ──────────────────────────────────────────────
+  # alza.cz answers automated requests with a captcha page, so it is not read; its own ads on Jobs.cz are.
+  - { name: "Alza", ats: jobscz, slug: "Alza", country: cz }
+  - { name: "Apify", ats: ashby, slug: "apify", country: cz }
+  - { name: "Ataccama", ats: lever, slug: "ataccama" }
+  - { name: "Bloomreach", ats: greenhouse, slug: "bloomreach" }
+  - { name: "Daktela", url: "https://daktela.com/cs/zdroje/otevrene-pozice", country: cz, location: "Praha" }
+  - { name: "Dateio", ats: bamboohr, slug: "dateio", country: cz }
+  - { name: "Daytrip", url: "https://join.daytrip.com/jobs" }
+  - { name: "Deepnote", ats: ashby, slug: "deepnote" }
+  - { name: "Emplifi", ats: greenhouse, slug: "emplifi" }
+  - { name: "FTMO", ats: ashby, slug: "ftmo", country: cz }
+  - { name: "Gen Digital", ats: ashby, slug: "gen-digital" }
+  - { name: "GoodData", ats: ashby, slug: "gooddata" }
+  - { name: "Groupon", ats: greenhouse, slug: "groupon" }
+  - { name: "Heureka", url: "https://join.heureka.group/cs/jobs", country: cz }
+  - { name: "JetBrains", ats: greenhouse, slug: "jetbrains" }
+  - { name: "Keboola", ats: lever, slug: "keboola", country: cz }
+  - { name: "Kiwi.com", ats: ashby, slug: "kiwi-com", country: cz }
+  - { name: "Kontent.ai", url: "https://kontent.ai/careers/" }
+  - { name: "Livesport", ats: recruitee, slug: "livesport", country: cz }
+  - { name: "Make", ats: greenhouse, slug: "make" }
+  - { name: "Mews", url: "https://www.mews.com/en/careers/jobs", render: true }
+  - { name: "Oddin.gg", ats: lever, slug: "oddin", country: cz }
+  - { name: "Productboard", url: "https://www.productboard.com/careers/open-positions/", render: true }
+  - { name: "Pure Storage", ats: greenhouse, slug: "purestorage" }
+  - { name: "Purple Technology", ats: lever, slug: "purple-technology" }
+  - { name: "Recombee", url: "https://www.recombee.com/jobs", country: cz, location: "Praha" }
+  - { name: "Rohlik", ats: ashby, slug: "rohlik" }
+  - { name: "ROUVY", url: "https://rouvy.com/cs/jobs", country: cz }
+  - { name: "Seznam.cz", url: "https://o-seznam.cz/kariera/volne-pozice/", country: cz }
+  - { name: "Shoptet", ats: teamtailor, slug: "shoptet", country: cz }
+  - { name: "Skip Pay", url: "https://skippay.cz/kariera/volne-pozice", country: cz, location: "Praha" }
+  - { name: "Supernova", ats: bamboohr, slug: "supernova" }
+  - { name: "Tatum", url: "https://tatum.io/tatum-careers", render: true }
+  # Jobs shown through another service's widget: the widget itself is read.
+  - { name: "ThreatMark", url: "https://www.tribee.cz/widget/company-jobs/v1?id=fd8fba35-46cf-409d-a4f1-5aa0361b8be4&locale=en&theme=light&photo=1&logo=1", country: cz }
+  - { name: "Twisto", ats: recruitee, slug: "twisto", country: cz }
+  # Another embedded widget.
+  - { name: "Whalebone", url: "https://app.recruitis.io/en/zadavatel/widgets/offers/h/10828048cb1dc35cfd3ea0181f548ac4566fbd/nbf/1/fg/team::location::worksetup/lang/en", country: cz }
+  - { name: "Wolt", ats: greenhouse, slug: "wolt" }
+
+  # ── Czechia: studios and agencies ───────────────────────────────────────────
+  - { name: "Ackee", url: "https://www.ackee.agency/career", country: cz, location: "Praha" }
+  - { name: "Applifting", url: "https://applifting.io/careers", country: cz, location: "Praha" }
+  - { name: "Cleevio", url: "https://cleevio.com/cs/careers", country: cz, location: "Praha" }
+  - { name: "DX Heroes", url: "https://dxheroes.io/careers", country: cz, location: "Praha" }
+  - { name: "eMan", url: "https://www.eman.cz/kariera/", country: cz, location: "Praha" }
+  - { name: "Etnetera", url: "https://www.etnetera.cz/prace-u-nas", country: cz, location: "Praha" }
+  - { name: "Futured", url: "https://futured.app/cs/kariera", country: cz, location: "Praha" }
+  - { name: "MeguMethod (ex Synetech)", url: "https://www.megumethod.com/career", country: cz, location: "Praha" }
+  - { name: "Pixelfield", url: "https://pixelfield.cz/kariera/", country: cz, location: "Praha" }
+  - { name: "Qest", url: "https://www.qest.cz/career", country: cz, location: "Praha" }
+  - { name: "STRV", ats: recruitee, slug: "strv", country: cz }
+  - { name: "Sudolabs", url: "https://sudolabs.com/careers" }
+
+  # ── International: Flutter and mobile tooling ───────────────────────────────
+  - { name: "Adapty", url: "https://adapty.io/careers/" }
+  - { name: "Canonical", ats: greenhouse, slug: "canonical" }
+  - { name: "FlutterFlow", ats: ashby, slug: "flutterflow" }
+  - { name: "LeanCode", url: "https://leancode.co/career" }
+  - { name: "RevenueCat", ats: ashby, slug: "revenuecat" }
+  - { name: "Rive", ats: workable, slug: "rivecareers" }
+  - { name: "Sentry", ats: ashby, slug: "sentry" }
+  - { name: "Shorebird", url: "https://shorebird.dev/jobs", render: true }
+  - { name: "Stream", ats: ashby, slug: "stream" }
+  - { name: "Supabase", ats: ashby, slug: "supabase" }
+  - { name: "Very Good Ventures", ats: greenhouse, slug: "verygoodventures" }
+
+  # ── International: product and AI-native engineering, remote in Europe ──────
+  - { name: "Appwrite", url: "https://appwrite.io/company" }
+  - { name: "Bitpanda", ats: greenhouse, slug: "bitpanda" }
+  - { name: "Cal.com", url: "https://cal.com/jobs" }
+  - { name: "Doist", url: "https://www.todoist.com/careers", render: true }
+  - { name: "Framer", url: "https://www.framer.com/careers/" }
+  - { name: "GitLab", ats: greenhouse, slug: "gitlab" }
+  - { name: "Kraken", ats: ashby, slug: "kraken.com" }
+  - { name: "Linear", ats: ashby, slug: "linear" }
+  - { name: "Lovable", ats: ashby, slug: "lovable" }
+  - { name: "n8n", ats: ashby, slug: "n8n" }
+  - { name: "PostHog", ats: ashby, slug: "posthog" }
+  - { name: "Preply", ats: ashby, slug: "preply" }
+  - { name: "Raycast", url: "https://www.raycast.com/careers" }
+  - { name: "Remote", url: "https://remote.com/openings" }
+  - { name: "Sourcegraph", ats: greenhouse, slug: "sourcegraph91" }
+  - { name: "Tide", ats: greenhouse, slug: "tide" }
+  - { name: "Toggl", url: "https://toggl.com/jobs/", render: true }
+  - { name: "Vercel", ats: greenhouse, slug: "vercel" }
+  - { name: "Zapier", ats: ashby, slug: "zapier" }
